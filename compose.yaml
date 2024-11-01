@@ -1,0 +1,27 @@
+services:
+
+  db:
+    image: mysql:9.1.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD:-projeto}
+      MYSQL_DATABASE: ${NAME:-projeto}
+      MYSQL_USER: ${USER:-projeto}
+      MYSQL_PASSWORD: ${PASSWORD:-projeto}
+    ports:
+      - "3307:3306"
+
+  api:
+    image: luizehp/app:3 
+    environment:
+      - USER=${USER:-projeto}
+      - PASSWORD=${PASSWORD:-projeto}
+      - SERVER=db
+      - PORT=3306
+      - NAME=${NAME:-projeto}
+      - SECRET_KEY=${SECRET_KEY:-CAVALO}
+      - ALGORITHM=${ALGORITHM:-HS256}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    restart: on-failure
